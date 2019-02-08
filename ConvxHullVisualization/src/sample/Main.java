@@ -4,20 +4,31 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    MainView view;
+    MainController controller;
+    MainModel model;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        BorderPane root = new BorderPane();
-        ConvexGridPane convexGrid = new ConvexGridPane(300,275);
-        root.setCenter(convexGrid);
+        StackPane root = new StackPane();
+        view = new MainView(1000,600);
+        controller = new MainController();
+        model = new MainModel();
+
+        view.setController(controller);
+        view.setModel(model);
+        controller.setModel(model);
+        model.addSubscriber(view);
+
+        root.getChildren().add(view);
         primaryStage.setTitle("Convex Hull Visualizer");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
