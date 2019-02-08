@@ -34,9 +34,12 @@ public class MainView extends Pane implements ModelListener {
     public void draw() {
         this.gc.setFill(Color.GRAY);
         this.gc.fillRect(0,0,this.width, this.height);
-        Vertex v = model.getSingleVertex();
         gc.setFill(Color.BLUE);
-        gc.fillOval(v.x, v.y, v.width, v.height);
+        for (Vertex v : model.getAllVertices()){
+            gc.fillOval(v.x, v.y, v.width, v.height);
+            gc.setStroke(Color.BLACK);
+            gc.strokeOval(v.x, v.y, v.width, v.height);
+        }
     }
 
     public void layoutChildren(){

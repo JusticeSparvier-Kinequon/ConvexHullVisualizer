@@ -7,7 +7,7 @@ public class MainController {
     double prevX, prevY;
 
     private enum State {
-        READY, DRAGGING
+        READY, DRAGGING, VERTEX_PREPARE, BACKGROUND_DRAG
     }
 
     private State currentState;
@@ -29,6 +29,9 @@ public class MainController {
                     this.prevY = event.getY();
                     this.currentState = State.DRAGGING;
                 }
+                else {
+                    this.currentState = State.VERTEX_PREPARE;
+                }
                 break;
         }
     }
@@ -41,10 +44,22 @@ public class MainController {
                 this.prevX = event.getX();
                 this.prevY = event.getY();
                 this.model.moveVertex(dX, dY);
+                break;
+            case VERTEX_PREPARE:
+                this.currentState = State.BACKGROUND_DRAG;
+                break;
+            case BACKGROUND_DRAG:
+                break;
         }
     }
 
     public void handleRelease(MouseEvent event){
+        switch(this.currentState){
+            case VERTEX_PREPARE:
+                model.addVertex(event.getX(), event.getY());
+                this.currentState = State.READY;
+                break;
+        }
         this.currentState = State.READY;
     }
 }

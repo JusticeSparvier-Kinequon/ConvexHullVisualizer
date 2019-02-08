@@ -1,27 +1,43 @@
 package sample;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class MainModel {
+    ArrayList<Vertex> allVertices;
     Vertex singleVertex;
     ArrayList<ModelListener> subscribers;
 
     public MainModel(){
         this.subscribers = new ArrayList<>();
-        this.singleVertex = new Vertex(100, 100, 25,25);
+        this.allVertices = new ArrayList<>();
     }
 
-    public Vertex getSingleVertex(){
-        return this.singleVertex;
+    public ArrayList<Vertex> getAllVertices(){
+        return this.allVertices;
+    }
+
+    public void addVertex(double x, double y){
+        this.allVertices.add(new Vertex(x, y));
+        notifySubscribers();
     }
 
     public boolean checkHit(double x, double y){
-        return singleVertex.checkHit(x, y);
+        Predicate<Vertex> p1 = v -> v.checkHit(x, y);
+        boolean result = allVertices.stream().anyMatch(p1);
+        if(result){
+            for (Vertex v : allVertices){
+                if(v.checkHit(x, y))
+                    singleVertex = v;
+            }
+        }
+        return result;
     }
 
+
     public void moveVertex(double dX, double dY){
-        this.singleVertex.move(dX,dY);
-        notifySubscribers();
+            singleVertex.move(dX, dY);
+            notifySubscribers();
     }
 
     public void addSubscriber(ModelListener newSub){

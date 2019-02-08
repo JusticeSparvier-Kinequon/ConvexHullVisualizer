@@ -4,11 +4,11 @@ public class Vertex {
     double x, y;
     double width, height;
 
-    public Vertex(double newX, double newY, double newW, double newH){
+    public Vertex(double newX, double newY){
         this.x = newX;
         this.y = newY;
-        this.width = newW;
-        this.height = newH;
+        this.width = 25;
+        this.height = 25;
     }
 
     public boolean checkHit(double clickX, double clickY){
