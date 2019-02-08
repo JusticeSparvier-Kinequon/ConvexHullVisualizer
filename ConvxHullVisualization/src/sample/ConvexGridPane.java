@@ -9,6 +9,13 @@ public class ConvexGridPane extends Pane {
 
     Canvas mainCanvas;
     GraphicsContext gc;
+    double size;
+
+    /*
+     * Constructor for ConvexGridPane
+     * Creates a canvas with it's width and height and fills it with a gray rectangle.
+     * Then adds the canvas as the ConvexGridPane's children
+     */
 
     public ConvexGridPane(double width, double height){
         mainCanvas = new Canvas(width,height);
@@ -18,9 +25,13 @@ public class ConvexGridPane extends Pane {
         this.getChildren().addAll(mainCanvas);
     }
 
+    /*
+     * Redraws the canvas to the height
+     */
     private void draw(){
         gc.setFill(Color.GRAY);
         gc.fillRect(0,0,mainCanvas.getWidth(), mainCanvas.getHeight());
+
     }
     protected void layoutChildren(){
         mainCanvas.setWidth(this.getWidth());
