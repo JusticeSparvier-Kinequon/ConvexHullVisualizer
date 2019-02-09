@@ -19,9 +19,11 @@ public class MainModel {
         return this.allVertices;
     }
 
+    public ArrayList<Vertex> getAllConvexPoints(){ return this.allConvexPoints; }
+
     public void addVertex(double x, double y){
         this.allVertices.add(new Vertex(x, y));
-        if(allVertices.size() > 3){
+        if(allVertices.size() >= 3){
             for (Vertex v2 : allVertices){
                 v2.setisConvex(false);
             }
@@ -42,7 +44,7 @@ public class MainModel {
 
     public void removeVertex(double x, double y){
         this.allVertices.remove(singleVertex);
-        if(allVertices.size() > 3){
+        if(allVertices.size() >= 3){
             for (Vertex v2 : allVertices){
                 v2.setisConvex(false);
             }
@@ -79,8 +81,23 @@ public class MainModel {
 
 
     public void moveVertex(double dX, double dY){
-            singleVertex.move(dX, dY);
-            notifySubscribers();
+        singleVertex.move(dX, dY);
+        if(allVertices.size() >= 3){
+            for (Vertex v2 : allVertices){
+                v2.setisConvex(false);
+            }
+
+            convexHull = new ConvexHullGrahamScan();
+            allConvexPoints = convexHull.makeHull(allVertices);
+            for(Vertex v1 : allConvexPoints){
+                for (Vertex v2 : allVertices){
+                    if(v1 == v2){
+                        v2.setisConvex(true);
+                    }
+                }
+            }
+        }
+        notifySubscribers();
     }
 
     public void addSubscriber(ModelListener newSub){
