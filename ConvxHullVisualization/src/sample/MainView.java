@@ -8,15 +8,14 @@ import javafx.scene.paint.Color;
 public class MainView extends Pane implements ModelListener {
     Canvas myCanvas;
     GraphicsContext gc;
-    double width, height;
     MainModel model;
     MainController controller;
 
     public MainView (int newWidth, int newHeight){
-        this.width = newWidth;
-        this.height = newHeight;
-        this.myCanvas = new Canvas(this.width, this.height);
+        this.myCanvas = new Canvas(newWidth, newHeight);
         this.gc = this.myCanvas.getGraphicsContext2D();
+        gc.setFill(Color.GRAY);
+        gc.fillRect(0,0,newWidth,newHeight);
         getChildren().add(this.myCanvas);
     }
 
@@ -33,20 +32,24 @@ public class MainView extends Pane implements ModelListener {
 
     public void draw() {
         this.gc.setFill(Color.GRAY);
-        this.gc.fillRect(0,0,this.width, this.height);
-        gc.setFill(Color.BLUE);
+        this.gc.fillRect(0,0,myCanvas.getWidth(), myCanvas.getHeight());
         for (Vertex v : model.getAllVertices()){
-            gc.fillOval(v.x, v.y, v.width, v.height);
+            if (v.isConvex){
+                gc.setFill(Color.ORANGE);
+                gc.fillOval(v.x, v.y, v.width, v.height);
+            }
+            else {
+                gc.setFill(Color.BLUE);
+                gc.fillOval(v.x, v.y, v.width, v.height);
+            }
             gc.setStroke(Color.BLACK);
             gc.strokeOval(v.x, v.y, v.width, v.height);
         }
     }
 
     public void layoutChildren(){
-        this.width = this.getWidth();
-        this.height = this.getHeight();
-        this.myCanvas.setWidth(width);
-        this.myCanvas.setHeight(height);
+        this.myCanvas.setWidth(this.getWidth());
+        this.myCanvas.setHeight(this.getHeight());
         draw();
     }
 

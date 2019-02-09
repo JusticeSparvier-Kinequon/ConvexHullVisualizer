@@ -7,7 +7,7 @@ public class MainController {
     double prevX, prevY;
 
     private enum State {
-        READY, DRAGGING, VERTEX_PREPARE, BACKGROUND_DRAG
+        READY, DRAGGING, VERTEX_PREPARE, BACKGROUND_DRAG, VERTEX_REMOVE
     }
 
     private State currentState;
@@ -28,6 +28,8 @@ public class MainController {
                     this.prevX = event.getX();
                     this.prevY = event.getY();
                     this.currentState = State.DRAGGING;
+                    if(event.isSecondaryButtonDown())
+                        this.currentState = State.VERTEX_REMOVE;
                 }
                 else {
                     this.currentState = State.VERTEX_PREPARE;
@@ -48,6 +50,9 @@ public class MainController {
             case VERTEX_PREPARE:
                 this.currentState = State.BACKGROUND_DRAG;
                 break;
+            case VERTEX_REMOVE:
+                this.currentState = State.BACKGROUND_DRAG;
+                break;
             case BACKGROUND_DRAG:
                 break;
         }
@@ -59,7 +64,10 @@ public class MainController {
                 model.addVertex(event.getX(), event.getY());
                 this.currentState = State.READY;
                 break;
+            case VERTEX_REMOVE:
+                model.removeVertex(event.getX(), event.getY());
         }
         this.currentState = State.READY;
     }
+
 }
